@@ -1,0 +1,28 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Mon Aug 27 01:05:29 2018
+
+SGD Classifier on MNIST image
+
+@author: K-C
+"""
+import numpy as np
+from sklearn.datasets import fetch_mldata
+from sklearn.linear_model import SGDClassifier
+mnist = fetch_mldata('MNIST original')
+X, y = mnist["data"], mnist["target"]
+X_train, X_test, y_train, y_test = X[:60000], X[60000:], y[:60000], y[60000:]
+shuffle_index = np.random.permutation(60000)
+X_train, y_train = X_train[shuffle_index], y_train[shuffle_index]
+y_train_5 = (y_train == 2)  # True for all 5s, False for all other digits.
+y_test_5 = (y_test == 2)
+sgd_clf = SGDClassifier(random_state=42)
+sgd_clf.fit(X_train, y_train_5)
+import matplotlib
+import matplotlib.pyplot as plt
+some_digit = X_train[36000]
+some_digit_image = some_digit.reshape(28, 28)
+plt.imshow(some_digit_image, cmap = matplotlib.cm.binary,
+           interpolation="nearest")
+
+sgd_clf.predict([some_digit])
